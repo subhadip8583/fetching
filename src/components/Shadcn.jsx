@@ -2,30 +2,63 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import axios from "axios";
+import instance from "@/utils/axiosInstances";
 
-export default function () {
-  const BASE_URL = "https://pokeapi.co/api/v2/pokemon";
-  const [url, setUrl] = useState(BASE_URL);
+export default function Shadcn() {
+  const BASE_URL = "https://pokeapi.co/api/v2/";
+  const [url, setUrl] = useState("/pokemon");
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
- 
 
   useEffect(() => {
-    setLoading(true);
-    setError(null);
+    const fetchbyaxios = async () => {
+      try {
+        setLoading(true);
+        const data = await instance({
+          url: url,
+          method: "get",
+        });
+        console.log(data);
+        setData(data.data);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    //     const fetchdata= async ()=>{
+    //       try{
+    //         setLoading(true);
+    //         const data= await fetch(url);
+    //         const res= await data.json();
+    //         setLoading(false);
+    //         setData(res);
 
-    fetch(url)
-      .then((response) => response.json())
-      .then((json) => {
-        setData(json);
-        setLoading(false);
-      })
-      .catch(() => {
-        setError("Something went wrong");
-        setLoading(false);
-      });
+    //       }
+    //       catch(e){
+    // console.log(e);
+    //       }
+
+    //     }
+    // setLoading(true);
+    // setError(null);
+
+    // fetch(url)
+    //   .then((data) => data.json())
+    //   .then((json) => {
+    //     setData(json);
+    //     setLoading(false);
+    //   })
+    //   .catch(() => {
+    //     setError("Something went wrong");
+    //     setLoading(false);
+    //   });
+    fetchbyaxios();
   }, [url]);
+
+  console.log(url);
 
   return (
     <div className="max-w-3x1 mx-auto p-4">
@@ -72,7 +105,6 @@ export default function () {
                   <span className="capitalize">
                     {item.name.replace("-", " ")}
                   </span>
-                
                 </li>
               ))}
             </ul>
